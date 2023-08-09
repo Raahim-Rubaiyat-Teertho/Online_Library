@@ -1,0 +1,55 @@
+body{
+    background-image: url('annie-spratt-4E1JOFK55kc-unsplash.jpg');
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+    background-position: center;
+    margin: 0px;
+    padding: 0px;
+}
+
+.container{
+    width: 350px;
+    height: 250px;
+    text-align: center;
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0));
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    border-radius: 20px;
+    border:1px solid rgba(84, 30, 30, 0.18);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37)
+}
+
+h1{
+    color: white;
+    font-family: 'EB Garamond', serif;
+    font-size: 40px;
+    border-bottom: 1.5px solid white;
+    padding-bottom: 8px;
+}
+
+.texts{
+    text-align: center;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    margin-top: 5px;
+}
+
+.title{
+    margin: 0px 0px 40px;
+    color: white;
+    margin-bottom: 30px;
+    font-family: 'EB Garamond', serif;
+}
+
+.buttons{
+    display: flex;
+    justify-content: space-evenly;
+    padding-bottom: 20px;
+}
