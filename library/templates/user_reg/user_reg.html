@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration Form</title>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container">
+        {% csrf_token %}
+        <form method=POST class="form-signup">
+            <h2>Register</h2>
+            <p>Create your account</p>
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-md-6">
+                        <input type="text" name="firstname" placeholder="First Name">
+
+                    </div>
+                    <div class="col-md-6">
+                        <input type="text" name="lastname" placeholder="Last Name">
+
+                    </div>
+
+                </div>
+
+            </div>
+            <div class="form-group">
+                <input type="email" name="email" placeholder="Email Address">
+
+            </div>
+            <div class="form-group">
+                <input type="password" name="password" placeholder="Password">
+
+            </div>
+            <div class="form-group">
+                <input type="text" name="nid" placeholder="NID Number">
+
+            </div>
+            <div class="form-group">
+                <input type="text" name="phone_number" placeholder="Phone Number">
+
+            </div>
+            <div class="form-group">
+                <input type="text" name="address" placeholder="Address">
+
+            </div>
+            <div class="form-group">
+                <input type="number" name="age" placeholder="Age">
+
+            </div>
+            <div class="form-group">
+                
+
+            </div>
+            <input type="submit" class="btn btn-success" name="" value="Submit">
+
+        </form>
+
+    </div>
+</body>
+</html>
