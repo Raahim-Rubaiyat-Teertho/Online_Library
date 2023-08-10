@@ -28,6 +28,9 @@ def register_user(request):
         return render(request, 'user_reg/dashboard.html')
     except:
         return render(request, "user_reg/user_reg.html")
+    
+def loginUser(request):
+    return render(request, "user_reg/login_user.html")
 
 def user_dashboard(request):
     return render(request, "user_reg/dashboard.html")
