@@ -22,6 +22,8 @@ def register_user(request):
 
         with connection.cursor() as cursor:
             cursor.execute("insert into user (fname, lname, email, password, nid, phone, address, age) values (%s, %s, %s, %s, %s, %s, %s, %s);", [fname, lname, email, password, nid, phone, address, age])
+            cursor.execute("insert into rent_provider (user_id) values (%s);", [nid])
+            cursor.execute("insert into rent_taker (user_id) values (%s);", [nid])
 
         return render(request, 'user_reg/dashboard.html')
     except:
