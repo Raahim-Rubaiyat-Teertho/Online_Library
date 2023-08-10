@@ -53,3 +53,13 @@ h1{
     justify-content: space-evenly;
     padding-bottom: 20px;
 }
+
+a {
+    text-decoration: none;
+    color: white;
+}
+
+
+a:hover{
+    color: black;
+}
