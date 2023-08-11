@@ -10,15 +10,15 @@ def index(request):
 
 def register_user(request):
     try:
-        if(request.method == "GET"):
-            fname = request.GET['firstname']
-            lname = request.GET['lastname']
-            email = request.GET['email']
-            password = request.GET['password']
-            nid = request.GET['nid']
-            phone = request.GET['phone_number']
-            address = request.GET['address']
-            age = request.GET['age']
+        if(request.method == "POST"):
+            fname = request.POST['firstname']
+            lname = request.POST['lastname']
+            email = request.POST['email']
+            password = request.POST['password']
+            nid = request.POST['nid']
+            phone = request.POST['phone_number']
+            address = request.POST['address']
+            age = request.POST['age']
 
         with connection.cursor() as cursor:
             cursor.execute("insert into user (fname, lname, email, password, nid, phone, address, age) values (%s, %s, %s, %s, %s, %s, %s, %s);", [fname, lname, email, password, nid, phone, address, age])
