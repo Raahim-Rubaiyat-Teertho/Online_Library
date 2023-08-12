@@ -46,8 +46,11 @@ def loginUser(request):
         
         if(email == login_dets[3] and password == login_dets[4]):
             # return render(request, 'user_reg/dashboard.html', {'data' : l, 'data1':ub})
-            return user_dashboard(request, login_dets, user_books)
+            # return user_dashboard(request, login_dets, user_books)
             # return Dashboard(login_dets, user_books)
+            request.session['user_info'] = login_dets
+            request.session['user_books'] = user_books
+            return redirect('user_dashboard')
        
 
         else:
@@ -58,7 +61,8 @@ def loginUser(request):
         return render(request, "user_reg/login_user.html")
 
 
-def user_dashboard(request, l, ub):
-    
+def user_dashboard(request):
+    l = request.session.get('user_info')
+    ub = request.session.get('user_books')
     return render(request, 'user_reg/dashboard.html', {'data':l, 'data1':ub})
 
