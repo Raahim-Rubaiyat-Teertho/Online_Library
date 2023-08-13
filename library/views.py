@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.shortcuts import redirect
-from .models import User 
+from .models import User, Book, Author 
 # Create your views here.
 from django.http import HttpResponse
 from .models import User
@@ -54,7 +54,7 @@ def loginUser(request):
        
 
         else:
-            # messages
+            #messages
             return render(request, "user_reg/login_user.html")
         
     except:
