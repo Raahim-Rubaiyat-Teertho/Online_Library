@@ -64,5 +64,8 @@ def loginUser(request):
 def user_dashboard(request):
     l = request.session.get('user_info')
     ub = request.session.get('user_books')
-    return render(request, 'user_reg/dashboard.html', {'data':l, 'data1':ub})
+    with connection.cursor() as cursor:
+        cursor.execute("select book.book_id, name, author_name, genre, publisher, rent_cost from book inner join author where book.book_id = author.book_id;")
+        uub = cursor.fetchall()
+    return render(request, 'user_reg/dashboard.html', {'data':l, 'data1':ub, 'data2':uub})
 
