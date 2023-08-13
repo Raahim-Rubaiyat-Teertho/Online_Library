@@ -65,7 +65,9 @@ def user_dashboard(request):
     l = request.session.get('user_info')
     ub = request.session.get('user_books')
     with connection.cursor() as cursor:
-        cursor.execute("select book.book_id, name, author_name, genre, publisher, rent_cost from book inner join author where book.book_id = author.book_id;")
+        cursor.execute("select book.book_id, name, author_name, genre, publisher, rent_cost from book inner join author where book.book_id = author.book_id and book.provider_id = %s;", [l[0]])
         uub = cursor.fetchall()
     return render(request, 'user_reg/dashboard.html', {'data':l, 'data1':ub, 'data2':uub})
 
+def upload_book(request):
+    return render(request, 'user_reg/upload_book_front.html')
