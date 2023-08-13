@@ -70,4 +70,30 @@ def user_dashboard(request):
     return render(request, 'user_reg/dashboard.html', {'data':l, 'data1':ub, 'data2':uub})
 
 def upload_book(request):
-    return render(request, 'user_reg/upload_book_front.html')
+    try:
+        user_info = request.session.get('user_info')
+        print(user_info[0])
+
+        if(request.method == "POST"):
+            book_name = request.POST['book_name']
+            author_name = request.POST['author']
+            genre = request.POST['genre']
+            copy_no = request.POST['copy_no']
+            publisher = request.POST['publisher']
+            rent_cost = request.POST['rent_cost']
+        
+            print('hi')
+
+        with connection.cursor() as cursor:
+            cursor.execute("insert into book (book_id, name, genre, copy_number, publisher, rent_cost, provider_id) values (%s, %s, %s, %s, %s, %s, %s);", [0, book_name, genre, copy_no, publisher, rent_cost, user_info[0]])
+            cursor.execute("select book_id from book where name = %s and provider_id = %s;", [book_name, user_info[0]])
+            book_id = cursor.fetchone()
+            cursor.execute("insert into author (book_id, author_name) values (%s, %s);", [book_id[0], author_name])
+            result = cursor.fetchone()
+
+        if(result == None):
+            return redirect('user_dashboard')        
+
+        return render(request, 'user_reg/upload_book_front.html')
+    except:
+        return render(request, 'user_reg/upload_book_front.html')
