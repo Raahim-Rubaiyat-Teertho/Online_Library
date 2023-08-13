@@ -8,8 +8,8 @@
 </head>
 <body>
     <div class="container">
-        {% csrf_token %}
-        <form method="get" class="form-signup">
+        <form method="post" class="form-signup">
+            {% csrf_token %}
             <h2>Sign Up</h2>
             <p>Create your account</p>
             <div class="form-group">

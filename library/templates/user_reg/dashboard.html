@@ -7,5 +7,23 @@
 </head>
 <body>
     <p>User Dashboard</p>
+    <h1>User Details</h1>
+    <p>{% for i in data %}
+            {{i}}
+            <br>
+        {% endfor %}
+    </p>
+    <h1>Uploaded Books</h1>
+    <p>
+        {% for i in data1 %}
+            {% for j in i %}
+                {{j}}
+                <br>
+            {% endfor %}
+            ---------------------------
+            <br>
+        {% endfor %}
+    </p>
+    <button type="button"><a href="{% url 'login_user' %}">Logout</a></button>
 </body>
 </html>

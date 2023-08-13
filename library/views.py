@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.shortcuts import redirect
 from .models import User 
 # Create your views here.
 from django.http import HttpResponse
@@ -10,15 +11,15 @@ def index(request):
 
 def register_user(request):
     try:
-        if(request.method == "GET"):
-            fname = request.GET['firstname']
-            lname = request.GET['lastname']
-            email = request.GET['email']
-            password = request.GET['password']
-            nid = request.GET['nid']
-            phone = request.GET['phone_number']
-            address = request.GET['address']
-            age = request.GET['age']
+        if(request.method == "POST"):
+            fname = request.POST['firstname']
+            lname = request.POST['lastname']
+            email = request.POST['email']
+            password = request.POST['password']
+            nid = request.POST['nid']
+            phone = request.POST['phone_number']
+            address = request.POST['address']
+            age = request.POST['age']
 
         with connection.cursor() as cursor:
             cursor.execute("insert into user (fname, lname, email, password, nid, phone, address, age) values (%s, %s, %s, %s, %s, %s, %s, %s);", [fname, lname, email, password, nid, phone, address, age])
@@ -30,7 +31,38 @@ def register_user(request):
         return render(request, "user_reg/user_reg.html")
     
 def loginUser(request):
-    return render(request, "user_reg/login_user.html")
+    try:
+        if(request.method == "POST"):
+            email = request.POST['email']
+            password = request.POST['pw']
+
+        with connection.cursor() as cursor:
+            cursor.execute("select * from user where email = %s and password = %s", [email, password])
+            login_dets = cursor.fetchone()
+
+        with connection.cursor() as cursor:
+            cursor.execute("select * from book where provider_id = %s", [login_dets[0]])
+            user_books = cursor.fetchall()
+        
+        if(email == login_dets[3] and password == login_dets[4]):
+            # return render(request, 'user_reg/dashboard.html', {'data' : l, 'data1':ub})
+            # return user_dashboard(request, login_dets, user_books)
+            # return Dashboard(login_dets, user_books)
+            request.session['user_info'] = login_dets
+            request.session['user_books'] = user_books
+            return redirect('user_dashboard')
+       
+
+        else:
+            # messages
+            return render(request, "user_reg/login_user.html")
+        
+    except:
+        return render(request, "user_reg/login_user.html")
+
 
 def user_dashboard(request):
-    return render(request, "user_reg/dashboard.html")
+    l = request.session.get('user_info')
+    ub = request.session.get('user_books')
+    return render(request, 'user_reg/dashboard.html', {'data':l, 'data1':ub})
+
