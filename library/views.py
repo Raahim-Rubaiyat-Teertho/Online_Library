@@ -109,8 +109,23 @@ def search_book(request):
             cursor.execute("select * from book inner join author where book.book_id = author.book_id and book.name = %s and book.provider_id != %s;", [book_n, user_info[0]])
             search_result = cursor.fetchall()
 
-        print(search_result)
-        return render(request, 'user_reg/search_book.html', {"d1":search_result})
+        with connection.cursor() as cursor:
+            cursor.execute('select fname, lname from user where nid = %s', [search_result[0][6]])
+            user_name = cursor.fetchall()
+
+        request.session['book_details'] = search_result
+        return render(request, 'user_reg/search_book.html', {"d1":search_result, 'd2' : user_name})
     except:
 
         return render(request, 'user_reg/search_book.html')
+    
+def confirm_rent(request):
+    book_details = request.session.get('book_details')
+    print(book_details)
+
+    with connection.cursor() as cursor:
+        cursor.execute('select fname, lname from user where nid = %s', [book_details[0][6]])
+        user_name = cursor.fetchall()
+        print(user_name)
+
+    return render(request, 'user_reg/confirm_rent.html', {'d1' : book_details, 'd2' : user_name})
