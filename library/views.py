@@ -103,10 +103,13 @@ def search_book(request):
             book_n = request.POST['book_name']
         
         user_info = request.session.get('user_info')
+        print(user_info[0])
 
         with connection.cursor() as cursor:
-            cursor.execute("select book.book_id, name, author_name, genre, publisher, rent_cost from book inner join author where book.book_id = author.book_id and book.provider_id != '%s';" , [user_info[0]])
+            cursor.execute("select * from book inner join author where book.book_id = author.book_id and book.name = %s and book.provider_id != %s;", [book_n, user_info[0]])
             search_result = cursor.fetchall()
+
+        print(search_result)
         return render(request, 'user_reg/search_book.html', {"d1":search_result})
     except:
 
