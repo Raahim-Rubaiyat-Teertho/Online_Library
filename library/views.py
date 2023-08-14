@@ -72,7 +72,7 @@ def user_dashboard(request):
 def upload_book(request):
     try:
         user_info = request.session.get('user_info')
-        print(user_info[0])
+        # print(user_info[0])
 
         if(request.method == "POST"):
             book_name = request.POST['book_name']
@@ -82,7 +82,6 @@ def upload_book(request):
             publisher = request.POST['publisher']
             rent_cost = request.POST['rent_cost']
         
-            print('hi')
 
         with connection.cursor() as cursor:
             cursor.execute("insert into book (book_id, name, genre, copy_number, publisher, rent_cost, provider_id) values (%s, %s, %s, %s, %s, %s, %s);", [0, book_name, genre, copy_no, publisher, rent_cost, user_info[0]])
@@ -97,3 +96,6 @@ def upload_book(request):
         return render(request, 'user_reg/upload_book_front.html')
     except:
         return render(request, 'user_reg/upload_book_front.html')
+    
+def search_book(request):
+    return render(request, 'user_reg/search_book.html')
