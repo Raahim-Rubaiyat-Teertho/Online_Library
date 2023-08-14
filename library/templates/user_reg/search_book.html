@@ -49,14 +49,18 @@
     <div class="container">
         <h4 style="margin-top: 25px;">Search for a book</h4>
         <form method="post" style="margin-top: 20px;">
+          {% csrf_token %}
             <div class="mb-3">
                 <!-- <label for="exampleInputEmail1" class="form-label">Email address</label> -->
                 <input type="text" class="form-control" name="book_name" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter book name">
                 <!-- <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div> -->
             </div>
+            <button type="submit" class="btn btn-dark">Search</button>
         </form>
     </div>
-
+    {% for i in d1 %}
+    {{i}}
+  {% endfor %}
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
 </body>
 </html>

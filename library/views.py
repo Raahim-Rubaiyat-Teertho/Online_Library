@@ -98,4 +98,16 @@ def upload_book(request):
         return render(request, 'user_reg/upload_book_front.html')
     
 def search_book(request):
-    return render(request, 'user_reg/search_book.html')
+    try:
+        if(request.method == "POST"):
+            book_n = request.POST['book_name']
+        
+        user_info = request.session.get('user_info')
+
+        with connection.cursor() as cursor:
+            cursor.execute("select book.book_id, name, author_name, genre, publisher, rent_cost from book inner join author where book.book_id = author.book_id and book.provider_id != '%s';" , [user_info[0]])
+            search_result = cursor.fetchall()
+        return render(request, 'user_reg/search_book.html', {"d1":search_result})
+    except:
+
+        return render(request, 'user_reg/search_book.html')
