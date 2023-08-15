@@ -106,8 +106,9 @@ def search_book(request):
         print(user_info[0])
 
         with connection.cursor() as cursor:
-            cursor.execute("select * from book inner join author where book.book_id = author.book_id and book.name = %s and book.provider_id != %s;", [book_n, user_info[0]])
+            cursor.execute("select book.book_id, name, genre, copy_number, publisher, rent_cost, provider_id from book inner join rents where book.book_id != rents.book_id and book.name = '%s' and book.provider_id != '%s';", [book_n, user_info[0]])
             search_result = cursor.fetchall()
+            print(search_result)
 
         with connection.cursor() as cursor:
             cursor.execute('select fname, lname from user where nid = %s', [search_result[0][6]])
