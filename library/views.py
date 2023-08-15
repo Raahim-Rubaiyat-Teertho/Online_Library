@@ -107,16 +107,21 @@ def search_book(request):
         # print(user_info[0])
 
         with connection.cursor() as cursor:
-            cursor.execute("select book.book_id, name, genre, copy_number, publisher, book.rent_cost, book.provider_id, book.book_id, author.author_name from book inner join author inner join rents where book.book_id = author.book_id and rents.book_id != book.book_id and book.name = %s and book.provider_id != %s;", [book_n, user_info[0]])
+            cursor.execute("select book.book_id, name, genre, copy_number, publisher, book.rent_cost, book.provider_id, user.fname, user.lname, book.book_id, author.author_name from book inner join author inner join rents inner join user where book.book_id = author.book_id and rents.book_id != book.book_id and book.name = %s and user.nid = book.provider_id and book.provider_id != %s;", [book_n, user_info[0]])
             search_result = cursor.fetchall()
             # print(search_result)
 
-        with connection.cursor() as cursor:
-            cursor.execute('select fname, lname from user where nid = %s', [search_result[0][6]])
-            user_name = cursor.fetchall()
+        names = []
+        for i in range(len(search_result)):
+            with connection.cursor() as cursor:
+                cursor.execute('select fname, lname from user where nid = %s', [search_result[i][6]])
+                user_name = cursor.fetchall()
+                names.append(user_name)
+
+        print(names)
 
         request.session['book_details'] = search_result
-        return render(request, 'user_reg/search_book.html', {"d1":search_result, 'd2' : user_name})
+        return render(request, 'user_reg/search_book.html', {"d1":search_result, 'd2' : user_name, 'd3' : names})
     except:
 
         return render(request, 'user_reg/search_book.html')

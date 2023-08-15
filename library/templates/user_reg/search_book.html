@@ -77,7 +77,6 @@
             <tbody>
                 {% for i in d1 %}
                 <tr>
-                  
                     <th scope="row">{{i.0}}</th>
                     <td>{{i.1}}</td>
                     <td>{{i.8}}</td>
@@ -85,7 +84,7 @@
                     <td>{{i.4}}</td>
                     <td>{{i.3}}</td>
                     <td>{{i.5}}</td>
-                    <td>{{d2.0.0}} {{d2.0.1}}</td>
+                    <td>{{i.7}} {{i.8}}</td>
                     <td><a href="{% url 'confirm_rent' %}">Rent Now</a></td>
                 </tr>
                   {% endfor %}
