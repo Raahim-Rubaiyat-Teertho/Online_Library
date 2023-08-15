@@ -5,6 +5,8 @@ from .models import User, Book, Author
 from django.http import HttpResponse
 from .models import User
 from django.db import connection
+import json
+import datetime
 
 def index(request):
     return render(request, 'start_page/index.html')
@@ -97,6 +99,12 @@ def upload_book(request):
     except:
         return render(request, 'user_reg/upload_book_front.html')
     
+# serialize_datetime function taken from geeksforgeeks to overcome json parse issue
+def serialize_datetime(obj):
+    if isinstance(obj, datetime.datetime):
+        return obj.isoformat()
+    raise TypeError("Type not serializable")
+
 def search_book(request):
     try:
         if(request.method == "POST"):
@@ -106,16 +114,17 @@ def search_book(request):
         print(user_info[0])
 
         with connection.cursor() as cursor:
-            cursor.execute("select book.book_id, name, genre, copy_number, publisher, rent_cost, provider_id from book inner join rents where book.book_id != rents.book_id and book.name = '%s' and book.provider_id != '%s';", [book_n, user_info[0]])
+            cursor.execute("select * from book inner join author inner join rents where book.book_id = author.book_id and rents.book_id != book.book_id and book.name = %s and book.provider_id != %s;", [book_n, user_info[0]])
             search_result = cursor.fetchall()
             print(search_result)
+            json_data = json.dumps(search_result, default=serialize_datetime)
 
         with connection.cursor() as cursor:
             cursor.execute('select fname, lname from user where nid = %s', [search_result[0][6]])
             user_name = cursor.fetchall()
 
-        request.session['book_details'] = search_result
-        return render(request, 'user_reg/search_book.html', {"d1":search_result, 'd2' : user_name})
+        request.session['book_details'] = json_data
+        return render(request, 'user_reg/search_book.html', {"d1":json_data, 'd2' : user_name})
     except:
 
         return render(request, 'user_reg/search_book.html')
