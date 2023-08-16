@@ -106,8 +106,9 @@ def search_book(request):
         user_info = request.session.get('user_info')
         # print(user_info[0])
 
+        book_n = book_n + '%'
         with connection.cursor() as cursor:
-            cursor.execute("select book.book_id, name, genre, copy_number, publisher, book.rent_cost, book.provider_id, user.fname, user.lname, book.book_id, author.author_name from book inner join author inner join rents inner join user where book.book_id = author.book_id and rents.book_id != book.book_id and book.name = %s and user.nid = book.provider_id and book.provider_id != %s;", [book_n, user_info[0]])
+            cursor.execute("select book.book_id, name, genre, copy_number, publisher, book.rent_cost, book.provider_id, user.fname, user.lname, book.book_id, author.author_name from book inner join author inner join rents inner join user where book.book_id = author.book_id and rents.book_id != book.book_id and book.name like %s and user.nid = book.provider_id and book.provider_id != %s;", [book_n, user_info[0]])
             search_result = cursor.fetchall()
             # print(search_result)
 
