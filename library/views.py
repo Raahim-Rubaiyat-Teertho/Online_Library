@@ -110,7 +110,7 @@ def search_book(request):
         with connection.cursor() as cursor:
             cursor.execute("select book.book_id, name, genre, copy_number, publisher, book.rent_cost, book.provider_id, user.fname, user.lname, book.book_id, author.author_name from book inner join author inner join rents inner join user where book.book_id = author.book_id and rents.book_id != book.book_id and book.name like %s and user.nid = book.provider_id and book.provider_id != %s;", [book_n, user_info[0]])
             search_result = cursor.fetchall()
-            # print(search_result)
+            print(search_result)
 
         names = []
         for i in range(len(search_result)):
@@ -122,12 +122,13 @@ def search_book(request):
         print(names)
 
         request.session['book_details'] = search_result
+
         return render(request, 'user_reg/search_book.html', {"d1":search_result, 'd2' : user_name, 'd3' : names})
     except:
 
         return render(request, 'user_reg/search_book.html')
     
-def confirm_rent(request):
+def confirm_rent(request, pk):
     book_details = request.session.get('book_details')
     print(book_details)
 
@@ -136,4 +137,8 @@ def confirm_rent(request):
         user_name = cursor.fetchall()
         print(user_name)
 
-    return render(request, 'user_reg/confirm_rent.html', {'d1' : book_details, 'd2' : user_name})
+    book = Book.objects.get(book_id=pk)
+    author = Author.objects.get(book_id = pk)
+    # user = User.objects.get(nid = )
+
+    return render(request, 'user_reg/confirm_rent.html', {'d1' : book_details, 'd2' : user_name, 'book' : book, 'author' : author})

@@ -85,7 +85,8 @@
                     <td>{{i.3}}</td>
                     <td>{{i.5}}</td>
                     <td>{{i.7}} {{i.8}}</td>
-                    <td><a href="{% url 'confirm_rent' %}">Rent Now</a></td>
+                    
+                    <td><a href="{% url 'confirm_rent' i.0 %}">Rent Now</a></td>
                 </tr>
                   {% endfor %}
               </tbody>
