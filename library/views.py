@@ -172,7 +172,7 @@ def payment(request):
 
         response = sslcz.createSession(post_body) # API response
         print(response)
-        return redirect(response['redirectGatewayURL'])
+        return redirect(response['GatewayPageURL'])
     
     except:
         return render(request, 'user_reg/confirm_rent.html')
