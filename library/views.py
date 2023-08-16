@@ -138,5 +138,7 @@ def confirm_rent(request, pk):
         print(user_name)
 
     book = Book.objects.get(book_id=pk)
+    author = Author.objects.get(book_id = pk)
+    # user = User.objects.get(nid = )
 
-    return render(request, 'user_reg/confirm_rent.html', {'d1' : book_details, 'd2' : user_name, 'book' : book})
+    return render(request, 'user_reg/confirm_rent.html', {'d1' : book_details, 'd2' : user_name, 'book' : book, 'author' : author})
