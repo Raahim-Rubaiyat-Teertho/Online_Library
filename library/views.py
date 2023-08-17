@@ -28,7 +28,7 @@ def register_user(request):
             cursor.execute("insert into rent_provider (user_id) values (%s);", [nid])
             cursor.execute("insert into rent_taker (user_id) values (%s);", [nid])
 
-        return render(request, 'user_reg/dashboard.html')
+        return render(request, 'user_reg/login_user.html')
     except:
         return render(request, "user_reg/user_reg.html")
     
@@ -57,7 +57,7 @@ def loginUser(request):
 
         else:
             #messages
-            return render(request, "user_reg/login_user.html")
+            return render(request, "user_reg/dashboard.html")
         
     except:
         return render(request, "user_reg/login_user.html")
