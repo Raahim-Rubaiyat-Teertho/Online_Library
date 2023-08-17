@@ -106,7 +106,6 @@ def search_book(request):
             book_n = request.POST['book_name']
         
         user_info = request.session.get('user_info')
-        # print(user_info[0])
 
         book_n = book_n + '%'
         with connection.cursor() as cursor:
@@ -121,9 +120,11 @@ def search_book(request):
                 user_name = cursor.fetchall()
                 names.append(user_name)
 
-        print(names)
+        # print(names)
+        print(user_info)
 
         request.session['book_details'] = search_result
+        print(search_result)
 
         return render(request, 'user_reg/search_book.html', {"d1":search_result, 'd2' : user_name, 'd3' : names})
     except:
@@ -141,26 +142,35 @@ def confirm_rent(request, pk):
 
     book = Book.objects.get(book_id=pk)
     author = Author.objects.get(book_id = pk)
-    # user = User.objects.get(nid = )
+    checkout_dets = [book.rent_cost]
+    request.session['book_details'] = checkout_dets
+    
 
     return render(request, 'user_reg/confirm_rent.html', {'d1' : book_details, 'd2' : user_name, 'book' : book, 'author' : author})
 
 @csrf_exempt
 def payment(request):
+    # user_info = request.session.get('user_info')
+    # book_details = request.session.get('book_details')
+
     try:
+        user_info = request.session.get('user_info')
+        print(user_info)
+        book_details = request.session.get('book_details')
+        print(book_details)
         settings = { 'store_id': 'onlin64dd360da6a67', 'store_pass': 'onlin64dd360da6a67@ssl', 'issandbox': True }
         sslcz = SSLCOMMERZ(settings)
         post_body = {}
-        post_body['total_amount'] = 100.26
+        post_body['total_amount'] = book_details[0]
         post_body['currency'] = "BDT"
         post_body['tran_id'] = "1"
         post_body['success_url'] = "http://127.0.0.1:8000/confirmed_pay/"
         post_body['fail_url'] = "https://www.youtube.com/"
         post_body['cancel_url'] = "https://www.instagram.com/"
         post_body['emi_option'] = 0
-        post_body['cus_name'] = "test"
-        post_body['cus_email'] = "test@test.com"
-        post_body['cus_phone'] = "01700000000"
+        post_body['cus_name'] = user_info[5] + ' ' + user_info[6]
+        post_body['cus_email'] = user_info[3]
+        post_body['cus_phone'] = user_info[1]
         post_body['cus_add1'] = "customer address"
         post_body['cus_city'] = "Dhaka"
         post_body['cus_country'] = "Bangladesh"
