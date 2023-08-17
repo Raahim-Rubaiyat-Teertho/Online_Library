@@ -1,10 +1,12 @@
 from django.shortcuts import render
 from django.shortcuts import redirect
 from .models import User, Book, Author 
+from django.views.decorators.csrf import csrf_exempt
 # Create your views here.
 from django.http import HttpResponse
 from .models import User
 from django.db import connection
+from sslcommerz_lib import SSLCOMMERZ 
 
 def index(request):
     return render(request, 'start_page/index.html')
@@ -142,3 +144,40 @@ def confirm_rent(request, pk):
     # user = User.objects.get(nid = )
 
     return render(request, 'user_reg/confirm_rent.html', {'d1' : book_details, 'd2' : user_name, 'book' : book, 'author' : author})
+
+@csrf_exempt
+def payment(request):
+    try:
+        settings = { 'store_id': 'onlin64dd360da6a67', 'store_pass': 'onlin64dd360da6a67@ssl', 'issandbox': True }
+        sslcz = SSLCOMMERZ(settings)
+        post_body = {}
+        post_body['total_amount'] = 100.26
+        post_body['currency'] = "BDT"
+        post_body['tran_id'] = "1"
+        post_body['success_url'] = "http://127.0.0.1:8000/confirmed_pay/"
+        post_body['fail_url'] = "https://www.youtube.com/"
+        post_body['cancel_url'] = "https://www.instagram.com/"
+        post_body['emi_option'] = 0
+        post_body['cus_name'] = "test"
+        post_body['cus_email'] = "test@test.com"
+        post_body['cus_phone'] = "01700000000"
+        post_body['cus_add1'] = "customer address"
+        post_body['cus_city'] = "Dhaka"
+        post_body['cus_country'] = "Bangladesh"
+        post_body['shipping_method'] = "NO"
+        post_body['multi_card_name'] = ""
+        post_body['num_of_item'] = 1
+        post_body['product_name'] = "Test"
+        post_body['product_category'] = "Test Category"
+        post_body['product_profile'] = "general"
+
+        response = sslcz.createSession(post_body) # API response
+        print(response)
+        return redirect(response['GatewayPageURL'])
+    
+    except:
+        return render(request, 'user_reg/confirm_rent.html')
+    
+@csrf_exempt
+def confirmed(request):
+    return render(request, "user_reg/confirmed.html")

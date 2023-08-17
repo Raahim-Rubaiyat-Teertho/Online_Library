@@ -10,4 +10,6 @@ urlpatterns = [
     path("upload_book/", views.upload_book, name = "upload_book"),
     path("search_book/", views.search_book, name="search_book"),
     path("confirm_rent/<str:pk>/", views.confirm_rent, name="confirm_rent"),
+    path("payment_gateway/", views.payment, name="payment_gateway"),
+    path("confirmed_pay/", views.confirmed, name='confirmed_pay')
 ]
