@@ -23,12 +23,15 @@ def register_user(request):
             address = request.POST['address']
             age = request.POST['age']
 
+            # info = [fname, lname, email, password, nid, phone, address, age]
+            # request.session['registered_info'] = info
+
         with connection.cursor() as cursor:
             cursor.execute("insert into user (fname, lname, email, password, nid, phone, address, age) values (%s, %s, %s, %s, %s, %s, %s, %s);", [fname, lname, email, password, nid, phone, address, age])
             cursor.execute("insert into rent_provider (user_id) values (%s);", [nid])
             cursor.execute("insert into rent_taker (user_id) values (%s);", [nid])
 
-        return render(request, 'user_reg/login_user.html')
+        return render(request, 'user_reg/dashboard.html')
     except:
         return render(request, "user_reg/user_reg.html")
     
@@ -57,7 +60,7 @@ def loginUser(request):
 
         else:
             #messages
-            return render(request, "user_reg/dashboard.html")
+            return render(request, "user_reg/login_user.html")
         
     except:
         return render(request, "user_reg/login_user.html")
@@ -66,6 +69,8 @@ def loginUser(request):
 def user_dashboard(request):
     l = request.session.get('user_info')
     ub = request.session.get('user_books')
+    # info = request.session.get('registered_info')
+
     with connection.cursor() as cursor:
         cursor.execute("select book.book_id, name, author_name, genre, publisher, rent_cost from book inner join author where book.book_id = author.book_id and book.provider_id = %s;", [l[0]])
         uub = cursor.fetchall()
