@@ -52,7 +52,7 @@ def loginUser(request):
             # return Dashboard(login_dets, user_books)
             request.session['user_info'] = login_dets
             request.session['user_books'] = user_books
-            return redirect('user_dashboard')
+            return redirect('login_user')
        
 
         else:
