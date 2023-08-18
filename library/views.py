@@ -31,9 +31,12 @@ def register_user(request):
             cursor.execute("insert into rent_provider (user_id) values (%s);", [nid])
             cursor.execute("insert into rent_taker (user_id) values (%s);", [nid])
 
-        return render(request, 'user_reg/dashboard.html')
+        return redirect("confirm_reg")
     except:
         return render(request, "user_reg/user_reg.html")
+    
+def confirm_reg(request):
+    return render(request, 'user_reg/confirm_reg.html')
     
 def loginUser(request):
     try:
