@@ -12,49 +12,52 @@
             {% csrf_token %}
             <h2>Sign Up</h2>
             <p>Create your account</p>
-            <div class="form-group">
-                <div class="row">
-                    <div class="col-md-6">
-                        <input type="text" name="firstname" placeholder="First Name">
+            <div class="mb-3">
+                
+                    
+                        <input type="text" name="firstname" class="form-control" placeholder="First Name">
 
                     </div>
-                    <div class="col-md-6">
-                        <input type="text" name="lastname" placeholder="Last Name">
+                    <div class="mb-3">
+                        <input type="text" name="lastname" class="form-control" placeholder="Last Name">
 
                     </div>
 
-                </div>
+                
+
+            
+            <div class="mb-3">
+                <input type="email" name="email" class="form-control" placeholder="Email Address">
 
             </div>
-            <div class="form-group">
-                <input type="email" name="email" placeholder="Email Address">
+            <div class="mb-3">
+                <input type="password" name="password" class="form-control" placeholder="Password">
 
             </div>
-            <div class="form-group">
-                <input type="password" name="password" placeholder="Password">
+            <div class="mb-3">
+                <input type="text" name="nid" class="form-control" placeholder="NID Number">
 
             </div>
-            <div class="form-group">
-                <input type="text" name="nid" placeholder="NID Number">
+            <div class="mb-3">
+                <input type="text" name="phone_number" class="form-control" placeholder="Phone Number">
 
             </div>
-            <div class="form-group">
-                <input type="text" name="phone_number" placeholder="Phone Number">
+            <div class="mb-3">
+                <input type="text" name="address" class="form-control" placeholder="Address">
 
             </div>
-            <div class="form-group">
-                <input type="text" name="address" placeholder="Address">
+            <div class="mb-3">
+                <input type="number" name="age" class="form-control" placeholder="Age">
 
             </div>
-            <div class="form-group">
-                <input type="number" name="age" placeholder="Age">
-
-            </div>
-            <div class="form-group">
+            <div class="mb-3">
+                <input type="submit" class="btn btn-dark" name="" value="Submit">
                 
 
             </div>
-            <input type="submit" class="btn btn-success" name="" value="Submit">
+        </div>
+           
+        
 
         </form>
 

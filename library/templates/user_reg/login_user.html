@@ -11,12 +11,12 @@
         <h2>Login</h2>
         <form method="post" class="form-login">
         {% csrf_token %}
-        <div class="form-group">
-            <input type="text" name="email" placeholder="Email">
+        <div class="mb-3">
+            <input type="text" name="email" class="form-control" placeholder="Email">
         </div>
         <br>
-        <div class="form-group">
-            <input type="password" name="pw" placeholder="Password">
+        <div class="mb-3">
+            <input type="password" name="pw" class="form-control" placeholder="Password">
 
         </div>
         <br>
