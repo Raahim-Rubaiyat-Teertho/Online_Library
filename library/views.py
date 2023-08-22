@@ -118,7 +118,7 @@ def search_book(request):
 
         book_n = book_n + '%'
         with connection.cursor() as cursor:
-            cursor.execute("select book.book_id, name, genre, copy_number, publisher, book.rent_cost, book.provider_id, user.fname, user.lname, book.book_id, author.author_name from book inner join author inner join rents inner join user where book.book_id = author.book_id and rents.book_id != book.book_id and book.name like %s and user.nid = book.provider_id and book.provider_id != %s;", [book_n, user_info[0]])
+            cursor.execute(" select book.book_id, name, genre, copy_number, publisher, book.rent_cost, book.provider_id, user.fname, user.lname, book.book_id, author.author_name from book inner join author on book.book_id = author.book_id inner join user on book.provider_id = user.nid left join rents on book.book_id = rents.book_id where rents.book_id IS NULL and book.provider_id != %s and book.name like %s;", [user_info[0], book_n])
             search_result = cursor.fetchall()
             print(search_result)
 
@@ -222,8 +222,8 @@ def payment(request):
         if(response['status'] == "SUCCESS"):
             print(response['sessionkey'], user_info[0], chosen_book[0][6], chosen_book[0][5], chosen_book[0][0])
             with connection.cursor() as cursor:
+                cursor.execute("insert into rents (rent_taker_id, book_id, rent_date, rent_end_date) values (%s, %s, %s, %s);", [user_info[0], chosen_book[0][0], rent_start, rent_end]),
                 cursor.execute("insert into payment (t_id, paid_by, received_by, amount, book_id) values (%s, %s, %s, %s, %s);", [response['sessionkey'], user_info[0], chosen_book[0][6], chosen_book[0][5], chosen_book[0][0]])
-                cursor.execute("insert into rents (rent_taker_id, book_id, rent_date, rent_end_date) values (%s, %s, %s, %s);", [user_info[0], chosen_book[0][0], rent_start, rent_end])
             
             with connection.cursor() as cursor:
                 cursor.execute("select lp_number from delivery_man where provider_id is NULL order by rand() limit 1;")
