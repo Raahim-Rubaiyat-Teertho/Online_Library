@@ -7,6 +7,7 @@ from django.http import HttpResponse
 from .models import User
 from django.db import connection
 from sslcommerz_lib import SSLCOMMERZ 
+from datetime import date, timedelta
 
 def index(request):
     return render(request, 'start_page/index.html')
@@ -152,7 +153,26 @@ def confirm_rent(request, pk):
     author = Author.objects.get(book_id = pk)
     checkout_dets = [book.rent_cost]
     request.session['book_details'] = checkout_dets
-    
+    chosen_book = []
+
+    with connection.cursor() as cursor:
+        cursor.execute('select * from book where book_id = %s', [pk])
+        a = cursor.fetchone()
+        chosen_book.append(a)
+
+    request.session['chosen_book'] = chosen_book
+
+    # with connection.cursor() as cursor:
+    #     cursor.execute("select lp_number from delivery_man where provider_id is NULL order by rand() limit 1;")
+    #     lp_no = cursor.fetchone()
+
+    # print(lp_no)
+
+    # with connection.cursor() as cursor:
+    #     cursor.execute('select user.address from user inner join book where book.provider_id = user.nid and book.provider_id = %s;', [chosen_book[0][6]])
+    #     address_provider = cursor.fetchone()
+
+    # print(address_provider)
 
     return render(request, 'user_reg/confirm_rent.html', {'d1' : book_details, 'd2' : user_name, 'book' : book, 'author' : author})
 
@@ -162,10 +182,16 @@ def payment(request):
     # book_details = request.session.get('book_details')
 
     try:
+        today = date.today()
+        till = today + timedelta(days=7)
+        rent_start = str(today)
+        rent_end = str(till)
         user_info = request.session.get('user_info')
         print(user_info)
         book_details = request.session.get('book_details')
-        print(book_details)
+        # print(book_details)
+        chosen_book = request.session.get('chosen_book')
+        print(chosen_book)
         settings = { 'store_id': 'onlin64dd360da6a67', 'store_pass': 'onlin64dd360da6a67@ssl', 'issandbox': True }
         sslcz = SSLCOMMERZ(settings)
         post_body = {}
@@ -190,7 +216,27 @@ def payment(request):
         post_body['product_profile'] = "general"
 
         response = sslcz.createSession(post_body) # API response
+        print(user_info)
         print(response)
+
+        if(response['status'] == "SUCCESS"):
+            print(response['sessionkey'], user_info[0], chosen_book[0][6], chosen_book[0][5], chosen_book[0][0])
+            with connection.cursor() as cursor:
+                cursor.execute("insert into payment (t_id, paid_by, received_by, amount, book_id) values (%s, %s, %s, %s, %s);", [response['sessionkey'], user_info[0], chosen_book[0][6], chosen_book[0][5], chosen_book[0][0]])
+                cursor.execute("insert into rents (rent_taker_id, book_id, rent_date, rent_end_date) values (%s, %s, %s, %s);", [user_info[0], chosen_book[0][0], rent_start, rent_end])
+            
+            with connection.cursor() as cursor:
+                cursor.execute("select lp_number from delivery_man where provider_id is NULL order by rand() limit 1;")
+                lp_no = cursor.fetchone()
+
+            with connection.cursor() as cursor:
+                cursor.execute('select user.address from user inner join book where book.provider_id = user.nid and book.provider_id = %s;', [chosen_book[0][6]])
+                address_provider = cursor.fetchone()
+
+            with connection.cursor() as cursor:
+                cursor.execute("UPDATE delivery_man SET provider_id = %s, provider_address = %s, recipient_address = %s WHERE delivery_man.lp_number = %s;", [chosen_book[0][6], address_provider[0], user_info[2], lp_no[0]])
+
+            print(response)
         return redirect(response['GatewayPageURL'])
     
     except:
