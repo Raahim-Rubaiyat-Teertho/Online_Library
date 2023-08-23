@@ -80,7 +80,7 @@ def user_dashboard(request):
         uub = cursor.fetchall()
 
     with connection.cursor() as cursor:
-        cursor.execute(" select book.book_id, book.name, book.copy_number, author.author_name, rents.rent_date, rents.rent_end_date, book.provider_id, user.phone, delivery_man.name from book inner join author inner join rents inner join user inner join delivery_man where rent_taker_id = %s and rents.book_id = book.book_id and author.book_id = book.book_id and user.nid = book.provider_id and delivery_man.provider_id = book.provider_id;", [l[0]])
+        cursor.execute("select book.book_id, book.name, book.copy_number, author.author_name, rents.rent_date, rents.rent_end_date, book.provider_id, user.phone, delivery_man.name from book inner join author inner join rents inner join user inner join delivery_man where rent_taker_id = %s and rents.book_id = book.book_id and author.book_id = book.book_id and user.nid = book.provider_id and delivery_man.deliver_to_nid = %s;", [l[0], l[0]])
         rented = cursor.fetchall()
     return render(request, 'user_reg/dashboard.html', {'data':l, 'data1':ub, 'data2':uub, 'data3' : rented})
 
@@ -238,7 +238,7 @@ def payment(request):
                 address_provider = cursor.fetchone()
 
             with connection.cursor() as cursor:
-                cursor.execute("UPDATE delivery_man SET provider_id = %s, provider_address = %s, recipient_address = %s WHERE delivery_man.lp_number = %s;", [chosen_book[0][6], address_provider[0], user_info[2], lp_no[0]])
+                cursor.execute("UPDATE delivery_man SET provider_id = %s, provider_address = %s, recipient_address = %s, deliver_to_nid = %s WHERE delivery_man.lp_number = %s;", [chosen_book[0][6], address_provider[0], user_info[2], user_info[0], lp_no[0]])
 
             print(response)
         return redirect(response['GatewayPageURL'])
