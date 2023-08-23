@@ -80,7 +80,7 @@ def user_dashboard(request):
         uub = cursor.fetchall()
 
     with connection.cursor() as cursor:
-        cursor.execute("select book.book_id, book.name, book.copy_number, author.author_name, rents.rent_date, rents.rent_end_date, book.provider_id, user.phone, delivery_man.name from book inner join author inner join rents inner join user inner join delivery_man where rent_taker_id = %s and rents.book_id = book.book_id and author.book_id = book.book_id and user.nid = book.provider_id and delivery_man.deliver_to_nid = %s;", [l[0], l[0]])
+        cursor.execute("select book.book_id, book.name, book.copy_number, author.author_name, rents.rent_date, rents.rent_end_date, book.provider_id, user.phone, delivery_man.name from book inner join author on author.book_id = book.book_id inner join user on user.nid = book.provider_id inner join rents on book.book_id = rents.book_id inner join delivery_man on delivery_man.provider_id = book.provider_id where rents.rent_taker_id = %s and delivery_man.deliver_to_nid = %s;", [l[0], l[0]])
         rented = cursor.fetchall()
     return render(request, 'user_reg/dashboard.html', {'data':l, 'data1':ub, 'data2':uub, 'data3' : rented})
 
