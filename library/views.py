@@ -80,9 +80,13 @@ def user_dashboard(request):
         uub = cursor.fetchall()
 
     with connection.cursor() as cursor:
-        cursor.execute("select book.book_id, book.name, book.copy_number, author.author_name, rents.rent_date, rents.rent_end_date, book.provider_id, user.phone, delivery_man.name from book inner join author on author.book_id = book.book_id inner join user on user.nid = book.provider_id inner join rents on book.book_id = rents.book_id inner join delivery_man on delivery_man.provider_id = book.provider_id where rents.rent_taker_id = %s and delivery_man.deliver_to_nid = %s;", [l[0], l[0]])
+        cursor.execute("select book.book_id, book.name, book.copy_number, author.author_name, rents.rent_date, rents.rent_end_date, book.provider_id, user.phone from book inner join author on book.book_id = author.book_id inner join rents on book.book_id = rents.book_id inner join user on book.provider_id = user.nid where rents.rent_taker_id = %s;", [l[0]])
         rented = cursor.fetchall()
-    return render(request, 'user_reg/dashboard.html', {'data':l, 'data1':ub, 'data2':uub, 'data3' : rented})
+
+    with connection.cursor() as cursor:
+        cursor.execute("select book.book_id, book.name, author.author_name, book.copy_number, payment.paid_by from book inner join author inner join payment where book.book_id = author.book_id and payment.book_id = book.book_id and payment.received_by = %s;", [l[0]])
+        rented_to = cursor.fetchall()
+    return render(request, 'user_reg/dashboard.html', {'data':l, 'data1':ub, 'data2':uub, 'data3' : rented, 'data4' : rented_to})
 
 def upload_book(request):
     try:
